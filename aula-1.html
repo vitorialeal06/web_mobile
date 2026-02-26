@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Aula 1</title>
+    </head>
+
+    <body>
+        <h1>Olá, mundo!</h1> 
+        <h2>Olá, mundo!</h2>
+        <p>Olá, mundo!</p>
+
+        <img src="img/imagem.png" alt="vpn" width="200px">
+        <a href="https://www.vpn.com">Clique aqui para acessar o VPN</a>
+
+        <h2>Lista ordenada</h2>
+        <ol>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+        </ol>
+
+        <h2>Lista não ordenada</h2>
+        <ul>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+        </ul>
+
+        <table>
+            <tbody>
+                <tr>
+
+                    <td>Celula 1</td>
+                    <td>Celula 2</td>
+                    <td>Celula 3</td>
+                </tr>
+                <tr>
+                    <td>Celula 4</td>
+                    <td>Celula 5</td>
+                    <td>Celula 6</td>
+                </tr>
+        </table>
+
+
+        <form action="/cadastro/" method="post">
+            <label for="login">Nome:</label>
+            <input type="text" id="login" name="login">
+
+            <label for="senha">senha:</label>
+            <input type="password" id="senha" name="senha">
+
+            <label for="numero">Número:</label>
+            <input type="number" min = "0" max = "100" step = "5" id="numero" name="numero">
+
+            <input type="radio" id="masculino" name="genero" value="masculino">
+            <label for="masculino">Masculino</label>
+            <input type="radio" id="feminino" name="genero" value="feminino">
+            <label for="feminino">Feminino</label>
+            <br>
+            <input type="checkbox" id="checkbox" name="checkbox">
+            <label for="checkbox">Aceito os termos de uso</label>
+
+            <br>
+
+            <label for = "curso">Curso:</label>
+                <select name = "curso" id = "curso">
+                    <option value = "ads">Análise e Desenvolvimento de Sistemas</option>
+                    <option value = "bd">Banco de Dados</option>
+                    <option value = "redes">Redes de Computadores</option>
+                </select>
+
+            <label for="mensagem">Mensagem:</label>
+            <textarea id="mensagem" name="mensagem" rows="4" cols="50"></textarea>
+<br>
+            <label for="list">Escolha uma opção:</label>
+            <input for = "list" type="datalist" id="list" name="list" list="options">
+                <datalist id="options">
+                    <option value="Opção 1">
+                    <option value="Opção 2">
+                    <option value="Opção 3">
+                </datalist>
+<br>
+                <input type = "date" id="data" name="data">
+            
+
+            <input type="hidden" name="hidden" value="valor oculto">
+            <input type="reset" value="Limpar">
+            <input type="submit" value="Enviar">
+        </form>
+        
+
+
+
+
+    </body>
+</html>
