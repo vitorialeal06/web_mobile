@@ -9,17 +9,22 @@ import {
   IonicRouteStrategy,
   provideIonicAngular,
 } from '@ionic/angular/standalone';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { IonicStorageModule } from '@ionic/storage-angular';
+import { importProvidersFrom } from '@angular/core';
+import { Drivers } from '@ionic/storage';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
-import { authInterceptor } from 'src/app/core/interceptors/auth.interceptor';
 
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    importProvidersFrom(
+      IonicStorageModule.forRoot({
+        driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage],
+      })
+    ),
   ],
 });

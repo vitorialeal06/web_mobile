@@ -2,7 +2,10 @@
   <ion-toolbar>
     <ion-title>Meus Veículos</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="logout()" color="medium">Sair</ion-button>
+      <ion-button (click)="confirmarLogout()" color="primary" fill="clear">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        Sair
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -22,39 +25,65 @@
   </div>
 
   <div class="empty-state" *ngIf="!carregando && veiculos.length === 0">
+    <ion-icon name="car-outline"></ion-icon>
     <p>Nenhum veículo cadastrado.</p>
   </div>
 
-  <div class="veiculos-grid" *ngIf="!carregando && veiculos.length > 0">
-    <div class="veiculo-card" *ngFor="let veiculo of veiculos">
+  <!-- Lista centralizada em 2/3 da largura da tela -->
+  <div class="veiculos-wrapper" *ngIf="!carregando && veiculos.length > 0">
+    <div class="veiculos-lista">
+      <ion-item-sliding *ngFor="let veiculo of veiculos">
 
-      <div class="foto-container">
-        <img
-          *ngIf="veiculo.foto"
-          [src]="getFotoUrl(veiculo.id)"
-          alt="Foto do veículo"
-        />
-        <div class="sem-foto" *ngIf="!veiculo.foto">
-          <ion-icon name="car-outline"></ion-icon>
-        </div>
-      </div>
+        <!-- Deslizar para a DIREITA: Editar -->
+        <ion-item-options side="start">
+          <ion-item-option color="primary" (click)="editarVeiculo(veiculo)">
+            <ion-icon slot="top" name="pencil-outline"></ion-icon>
+            Editar
+          </ion-item-option>
+        </ion-item-options>
 
-      <div class="veiculo-info">
-        <h2>{{ veiculo.nome_marca }} {{ veiculo.modelo }}</h2>
-        <p>{{ veiculo.ano }} · {{ veiculo.nome_cor }} · {{ veiculo.nome_combustivel }}</p>
-      </div>
+        <!-- Card do veículo -->
+        <ion-item lines="none" class="veiculo-item">
+          <div class="veiculo-card">
 
-      <div class="veiculo-acoes">
-        <ion-button fill="outline" color="primary" (click)="editarVeiculo(veiculo)">
-          <ion-icon slot="start" name="pencil-outline"></ion-icon>
-          Editar
-        </ion-button>
-        <ion-button fill="outline" color="danger" (click)="confirmarExclusao(veiculo)">
-          <ion-icon slot="start" name="trash-outline"></ion-icon>
-          Excluir
-        </ion-button>
-      </div>
+            <div class="foto-container">
+              <!-- Foto carregada via base64 autenticado -->
+              <img
+                *ngIf="veiculo.foto && fotosSrc[veiculo.id]"
+                [src]="fotosSrc[veiculo.id]"
+                alt="Foto do veículo"
+              />
+              <!-- Spinner enquanto a foto ainda está carregando -->
+              <div class="foto-carregando" *ngIf="veiculo.foto && !fotosSrc[veiculo.id]">
+                <ion-spinner name="crescent"></ion-spinner>
+              </div>
+              <!-- Sem foto cadastrada -->
+              <div class="sem-foto" *ngIf="!veiculo.foto">
+                <ion-icon name="car-outline"></ion-icon>
+              </div>
+            </div>
 
+            <div class="veiculo-info">
+              <h2>{{ veiculo.nome_marca }} {{ veiculo.modelo }}</h2>
+              <div class="veiculo-detalhes">
+                <span class="tag">{{ veiculo.ano }}</span>
+                <span class="tag">{{ veiculo.nome_cor }}</span>
+                <span class="tag">{{ veiculo.nome_combustivel }}</span>
+              </div>
+            </div>
+
+          </div>
+        </ion-item>
+
+        <!-- Deslizar para a ESQUERDA: Excluir -->
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="confirmarExclusao(veiculo)">
+            <ion-icon slot="top" name="trash-outline"></ion-icon>
+            Excluir
+          </ion-item-option>
+        </ion-item-options>
+
+      </ion-item-sliding>
     </div>
   </div>
 
@@ -84,41 +113,27 @@
         <ion-item lines="none">
           <ion-label position="stacked">Marca</ion-label>
           <ion-select [(ngModel)]="veiculoEditando.marca" placeholder="Selecione">
-            <ion-select-option [value]="1">Toyota</ion-select-option>
-            <ion-select-option [value]="2">Honda</ion-select-option>
-            <ion-select-option [value]="3">Ford</ion-select-option>
-            <ion-select-option [value]="4">Chevrolet</ion-select-option>
-            <ion-select-option [value]="5">Volkswagen</ion-select-option>
-            <ion-select-option [value]="6">Nissan</ion-select-option>
-            <ion-select-option [value]="7">Hyundai</ion-select-option>
-            <ion-select-option [value]="8">Kia</ion-select-option>
-            <ion-select-option [value]="9">Renault</ion-select-option>
-            <ion-select-option [value]="10">Peugeot</ion-select-option>
+            <ion-select-option *ngFor="let opcao of opcoesMarca" [value]="opcao.valor">
+              {{ opcao.label }}
+            </ion-select-option>
           </ion-select>
         </ion-item>
 
         <ion-item lines="none">
           <ion-label position="stacked">Cor</ion-label>
           <ion-select [(ngModel)]="veiculoEditando.cor" placeholder="Selecione">
-            <ion-select-option [value]="1">Preto</ion-select-option>
-            <ion-select-option [value]="2">Branco</ion-select-option>
-            <ion-select-option [value]="3">Prata</ion-select-option>
-            <ion-select-option [value]="4">Cinza</ion-select-option>
-            <ion-select-option [value]="5">Vermelho</ion-select-option>
-            <ion-select-option [value]="6">Azul</ion-select-option>
-            <ion-select-option [value]="7">Amarelo</ion-select-option>
+            <ion-select-option *ngFor="let opcao of opcoesCor" [value]="opcao.valor">
+              {{ opcao.label }}
+            </ion-select-option>
           </ion-select>
         </ion-item>
 
         <ion-item lines="none">
           <ion-label position="stacked">Combustível</ion-label>
           <ion-select [(ngModel)]="veiculoEditando.combustivel" placeholder="Selecione">
-            <ion-select-option [value]="1">Gasolina</ion-select-option>
-            <ion-select-option [value]="2">Álcool</ion-select-option>
-            <ion-select-option [value]="3">Diesel</ion-select-option>
-            <ion-select-option [value]="4">Flex</ion-select-option>
-            <ion-select-option [value]="5">Elétrico</ion-select-option>
-            <ion-select-option [value]="6">Híbrido</ion-select-option>
+            <ion-select-option *ngFor="let opcao of opcoesCombustivel" [value]="opcao.valor">
+              {{ opcao.label }}
+            </ion-select-option>
           </ion-select>
         </ion-item>
 

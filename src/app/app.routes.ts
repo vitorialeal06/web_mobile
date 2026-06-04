@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { authGuard } from 'src/app/core/interceptors/auth.guard';
-
 export const routes: Routes = [
   {
     path: 'home',
@@ -10,7 +8,6 @@ export const routes: Routes = [
     path: 'veiculos',
     loadComponent: () =>
       import('src/app/veiculos/veiculos.page').then((m) => m.VeiculosPage),
-    canActivate: [authGuard],
   },
   {
     path: '',
